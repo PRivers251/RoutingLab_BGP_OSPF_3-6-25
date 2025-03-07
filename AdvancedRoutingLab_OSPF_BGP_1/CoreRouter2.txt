@@ -1,0 +1,134 @@
+!
+!
+!
+
+!
+! Last configuration change at 01:36:59 UTC Tue Mar 4 2025
+upgrade fpd auto
+version 15.3
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname CoreRouter2
+!
+boot-start-marker
+boot-end-marker
+!
+aqm-register-fnf
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+ip tcp synwait-time 5
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+ duplex auto
+!
+interface GigabitEthernet0/0
+ ip address 172.16.3.2 255.255.255.252
+ duplex full
+ speed 1000
+ media-type gbic
+ negotiation auto
+!
+interface GigabitEthernet1/0
+ ip address 10.1.0.2 255.255.255.252
+ negotiation auto
+!
+interface GigabitEthernet2/0
+ ip address 10.2.2.1 255.255.255.252
+ negotiation auto
+!
+interface GigabitEthernet3/0
+ ip address 10.2.3.1 255.255.255.252
+ negotiation auto
+!
+router ospf 1
+ router-id 1.1.2.2
+ network 10.1.0.0 0.0.0.3 area 0
+ network 10.2.2.0 0.0.0.3 area 0
+ network 10.2.3.0 0.0.0.3 area 0
+ default-information originate metric 10 metric-type 1
+!
+router bgp 65001
+ bgp log-neighbor-changes
+ neighbor 172.16.3.1 remote-as 65020
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+!
+no cdp log mismatch duplex
+!
+!
+!
+control-plane
+!
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+ transport input all
+!
+!
+end
